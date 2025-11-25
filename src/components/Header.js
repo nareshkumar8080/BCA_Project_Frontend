@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Header = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
 
   return (
     <header className="card" style={{ borderRadius: 0, marginBottom: "1rem" }}>
@@ -20,6 +20,7 @@ const Header = () => {
               <NavLink to="/previous-rides">List</NavLink>
               <NavLink to="/profile#ratings">Ratings</NavLink>
               <NavLink to="/profile">Profile</NavLink>
+              {user?.role === "admin" && <NavLink to="/admin">Admin</NavLink>}
               <button className="btn secondary" onClick={logout}>
                 Logout
               </button>

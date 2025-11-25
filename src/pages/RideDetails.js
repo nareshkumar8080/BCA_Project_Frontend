@@ -16,6 +16,8 @@ const RideDetails = () => {
 
   if (!ride) return <main className="container">Loading...</main>;
 
+  const riderProfile = typeof ride.riderId === "object" ? ride.riderId : {};
+
   return (
     <main className="container grid">
       <div className="card">
@@ -26,8 +28,11 @@ const RideDetails = () => {
           {ride.date} at {ride.time}
         </p>
         <p>Price: ₹{ride.fare}</p>
-        <p>Rider: {ride.riderId?.name}</p>
-        <p>Contact: {ride.riderContact || ride.riderId?.phone}</p>
+        <p>
+          Rider: {riderProfile.name || "NA"}
+          {riderProfile.rating !== undefined && ` • Rating ${Number(riderProfile.rating).toFixed(1)}/5`}
+        </p>
+        <p>Contact: {ride.riderContact || riderProfile.phone || "NA"}</p>
       </div>
       <p className="card">
         Complaints and ratings can be submitted from the Previous Rides page once your trip is marked

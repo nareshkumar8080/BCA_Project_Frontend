@@ -73,8 +73,9 @@ const Register = () => {
           <label>
             Role
             <select name="role" value={form.role} onChange={handleChange}>
-              <option value="student">Student</option>
+              <option value="student">Customer / Student</option>
               <option value="rider">Rider</option>
+              {/* <option value="admin">Admin</option> */}
             </select>
           </label>
           <label>

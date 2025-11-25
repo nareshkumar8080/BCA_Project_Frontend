@@ -16,15 +16,7 @@
     "react-router-dom": "^6.28.0"
   },
   "devDependencies": {
-    "eslint-plugin-react-hooks": "^7.0.1",
     "react-scripts": "5.0.1"
-  },
-  "eslintConfig": {
-    "plugins": ["react-hooks"],
-    "rules": {
-      "react-hooks/rules-of-hooks": "error",
-      "react-hooks/exhaustive-deps": "warn"
-    }
   },
   "browserslist": {
     "production": [

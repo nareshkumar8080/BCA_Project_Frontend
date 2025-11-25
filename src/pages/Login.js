@@ -18,8 +18,9 @@ const Login = () => {
     e.preventDefault();
     setError("");
     try {
-      await login(form);
-      const redirect = location.state?.from?.pathname || "/dashboard";
+      const loggedIn = await login(form);
+      const defaultRedirect = loggedIn?.role === "admin" ? "/admin" : "/dashboard";
+      const redirect = location.state?.from?.pathname || defaultRedirect;
       navigate(redirect, { replace: true });
     } catch (err) {
       setError(err.response?.data?.message || "Unable to login");
@@ -42,7 +43,10 @@ const Login = () => {
         <button className="btn" disabled={loading}>
           {loading ? "Signing in..." : "Login"}
         </button>
-        <Link to="/register">Need an account? Register</Link>
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          <Link to="/reset-password">Reset password</Link>
+          <Link to="/register">Need an account? Register</Link>
+        </div>
       </form>
     </main>
   );

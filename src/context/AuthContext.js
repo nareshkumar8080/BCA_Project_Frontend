@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
       const { data } = await api.post("/auth/login", payload);
       setUser(data.data);
       setToken(data.token);
-      return { success: true };
+      return data.data;
     } finally {
       setLoading(false);
     }

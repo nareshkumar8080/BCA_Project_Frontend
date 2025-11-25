@@ -6,7 +6,6 @@ import useRides from "../hooks/useRides";
 import api from "../api";
 import { useAuth } from "../context/AuthContext";
 
-
 const Home = () => {
   const { rides, refresh, setFilters } = useRides();
   const [selectedRide, setSelectedRide] = useState(null);
