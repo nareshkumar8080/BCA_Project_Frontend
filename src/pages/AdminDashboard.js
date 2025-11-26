@@ -102,19 +102,25 @@ const AdminDashboard = () => {
   };
 
   return (
-    <main className="container grid" style={{ gap: "1.5rem" }}>
+    <main className="container grid home-page">
       <header className="card">
-        <h1>Admin control center</h1>
-        <p>Manage every user, ride, rating, and complaint from a single place.</p>
+        <p className="eyebrow">Admin console</p>
+        <h1 className="page-title">Control center</h1>
+        <p className="section-subtitle">Manage every user, ride, rating and complaint with enterprise clarity.</p>
       </header>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {loading && <p>Loading admin data...</p>}
+      {error && <div className="card text-error">{error}</div>}
+      {loading && <div className="card">Loading admin data...</div>}
 
       {stats && (
         <section className="card">
-          <h2>System statistics</h2>
-          <div className="grid" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1rem" }}>
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">System statistics</p>
+              <h2>Live network health</h2>
+            </div>
+          </div>
+          <div className="stats-grid">
             <StatTile label="Total users" value={stats.totals.users} />
             <StatTile label="Riders" value={stats.totals.riders} />
             <StatTile label="Customers" value={stats.totals.customers} />
@@ -131,9 +137,9 @@ const AdminDashboard = () => {
       )}
 
       <section className="card">
-        <div style={{ display: "flex", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap" }}>
+        <div className="section-heading">
           <h2>User directory</h2>
-          <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+          <div className="filter-bar">
             <input
               placeholder="Search name, email, phone"
               value={filters.search}
@@ -147,8 +153,8 @@ const AdminDashboard = () => {
             </select>
           </div>
         </div>
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <div className="table-wrapper">
+          <table className="data-table">
             <thead>
               <tr>
                 <th align="left">Name</th>
@@ -167,31 +173,30 @@ const AdminDashboard = () => {
                   <td>{user.role === "student" ? "Customer" : user.role}</td>
                   <td>{user.rating ? `${Number(user.rating).toFixed(1)}/5` : "New"}</td>
                   <td>{user.isActive ? "Active" : "Inactive"}</td>
-                  <td style={{ display: "flex", gap: "0.5rem" }}>
-                    <button className="btn secondary" disabled={busyUser === user._id} onClick={() => toggleUserStatus(user)}>
-                      {user.isActive ? "Deactivate" : "Activate"}
-                    </button>
-                    <button
-                      className="btn secondary"
-                      style={{ background: "#c62828", color: "#fff" }}
-                      disabled={busyUser === user._id}
-                      onClick={() => deleteUser(user)}
-                    >
-                      Delete
-                    </button>
+                  <td>
+                    <div className="history-actions">
+                      <button className="btn secondary" disabled={busyUser === user._id} onClick={() => toggleUserStatus(user)}>
+                        {user.isActive ? "Deactivate" : "Activate"}
+                      </button>
+                      <button className="btn destructive" disabled={busyUser === user._id} onClick={() => deleteUser(user)}>
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          {!filteredUsers.length && <p style={{ marginTop: "1rem" }}>No users match these filters.</p>}
+          {!filteredUsers.length && <div className="empty-state">No users match these filters.</div>}
         </div>
       </section>
 
       <section className="card">
-        <h2>Trips</h2>
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <div className="section-heading">
+          <h2>Trips</h2>
+        </div>
+        <div className="table-wrapper">
+          <table className="data-table">
             <thead>
               <tr>
                 <th align="left">Route</th>
@@ -218,12 +223,7 @@ const AdminDashboard = () => {
                     {ride.riderId?.rating !== undefined && ` (${Number(ride.riderId.rating).toFixed(1)}/5)`}
                   </td>
                   <td>
-                    <button
-                      className="btn secondary"
-                      style={{ background: "#c62828", color: "#fff" }}
-                      disabled={busyRide === ride._id}
-                      onClick={() => deleteRide(ride)}
-                    >
+                    <button className="btn destructive" disabled={busyRide === ride._id} onClick={() => deleteRide(ride)}>
                       Delete
                     </button>
                   </td>
@@ -231,16 +231,18 @@ const AdminDashboard = () => {
               ))}
             </tbody>
           </table>
-          {!rides.length && <p style={{ marginTop: "1rem" }}>No rides available.</p>}
+          {!rides.length && <div className="empty-state">No rides available.</div>}
         </div>
       </section>
 
       <section className="card">
-        <h2>Complaints</h2>
-        {!complaints.length && <p>No complaints filed.</p>}
-        <div className="grid" style={{ gap: "1rem" }}>
+        <div className="section-heading">
+          <h2>Complaints</h2>
+        </div>
+        {!complaints.length && <div className="empty-state">No complaints filed.</div>}
+        <div className="grid">
           {complaints.map((complaint) => (
-            <article key={complaint._id} className="card" style={{ background: "#fafafa" }}>
+            <article key={complaint._id} className="card supporting-panel">
               <p>
                 <strong>Passenger:</strong> {complaint.userId?.name} ({complaint.userId?.email})
               </p>
@@ -260,9 +262,10 @@ const AdminDashboard = () => {
 };
 
 const StatTile = ({ label, value }) => (
-  <div style={{ padding: "0.75rem", border: "1px solid #e0e0e0", borderRadius: "0.5rem" }}>
-    <p style={{ margin: 0, fontSize: "0.8rem", textTransform: "uppercase", color: "#777" }}>{label}</p>
-    <p style={{ margin: 0, fontSize: "1.5rem", fontWeight: 700 }}>{value ?? 0}</p>
+  <div className="stat-card">
+    <small>{label}</small>
+    <strong>{value ?? 0}</strong>
+    <span>Live</span>
   </div>
 );
 

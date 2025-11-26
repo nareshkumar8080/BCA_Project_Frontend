@@ -14,30 +14,52 @@ const RideDetails = () => {
     load();
   }, [id]);
 
-  if (!ride) return <main className="container">Loading...</main>;
+  if (!ride) return <main className="container card">Loading...</main>;
 
   const riderProfile = typeof ride.riderId === "object" ? ride.riderId : {};
 
   return (
-    <main className="container grid">
-      <div className="card">
-        <h1>
+    <main className="container grid home-page">
+      <section className="card">
+        <p className="eyebrow">Ride detail</p>
+        <h1 className="page-title">
           {ride.from} → {ride.to}
         </h1>
-        <p>
-          {ride.date} at {ride.time}
+        <p className="ride-card__meta">
+          <span>
+            {ride.date} · {ride.time}
+          </span>
+          <span>{ride.distance} km</span>
+          <span>₹{ride.fare}</span>
         </p>
-        <p>Price: ₹{ride.fare}</p>
-        <p>
-          Rider: {riderProfile.name || "NA"}
-          {riderProfile.rating !== undefined && ` • Rating ${Number(riderProfile.rating).toFixed(1)}/5`}
+
+        <div className="stats-grid">
+          <article className="stat-card">
+            <small>Rider</small>
+            <strong className="stat-value-sm">{riderProfile.name || "NA"}</strong>
+            <span>{riderProfile.gender || "—"}</span>
+          </article>
+          <article className="stat-card">
+            <small>Rating</small>
+            <strong>{riderProfile.rating ? Number(riderProfile.rating).toFixed(1) : "New"}</strong>
+            <span>Community verified</span>
+          </article>
+          <article className="stat-card">
+            <small>Contact</small>
+            <strong className="stat-value-sm">{ride.riderContact || riderProfile.phone || "NA"}</strong>
+            <span>Share once booked</span>
+          </article>
+        </div>
+      </section>
+
+      <section className="card supporting-panel">
+        <p className="eyebrow">Need something?</p>
+        <p className="section-subtitle">
+          Complaints and ratings can be submitted from the Previous Rides page once your trip is marked as completed.
+          Admins review every escalation with full context.
         </p>
-        <p>Contact: {ride.riderContact || riderProfile.phone || "NA"}</p>
-      </div>
-      <p className="card">
-        Complaints and ratings can be submitted from the Previous Rides page once your trip is marked
-        as completed.
-      </p>
+        <strong>Helpline: +91-800-000-0000</strong>
+      </section>
     </main>
   );
 };

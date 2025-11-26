@@ -64,19 +64,32 @@ const ResetPassword = () => {
   };
 
   return (
-    <main className="container">
-      <form className="card grid" onSubmit={submitReset}>
-        <h1>Reset password</h1>
-        <p>Step 1: enter your email and send a reset code. Step 2: enter the code and your new password.</p>
+    <main className="container form-page">
+      <section className="card supporting-panel">
+        <p className="eyebrow">Account recovery</p>
+        <h1 className="page-title">Reset your password</h1>
+        <p className="section-subtitle">
+          We will send a secure OTP to your inbox. Validate it and set a new password in under a minute.
+        </p>
+        <ul className="list-clean">
+          <li>OTP expires in 10 minutes</li>
+          <li>Reuse of old passwords is blocked</li>
+          <li>For assistance reach the helpline</li>
+        </ul>
+      </section>
+
+      <form className="card form-panel grid" onSubmit={submitReset}>
         <label>
           Email
           <input type="email" name="email" value={form.email} onChange={handleChange} required />
         </label>
+
         {!codeSent && (
           <button type="button" className="btn" onClick={sendCode} disabled={submitting}>
-            {submitting ? "Sending..." : "Send code"}
+            {submitting ? "Sending..." : "Send reset code"}
           </button>
         )}
+
         {codeSent && (
           <>
             <label>
@@ -96,6 +109,7 @@ const ResetPassword = () => {
             </button>
           </>
         )}
+
         {status && <small>{status}</small>}
         <Link to="/login">Back to login</Link>
       </form>

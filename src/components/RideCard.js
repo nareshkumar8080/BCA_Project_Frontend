@@ -11,43 +11,57 @@ const RideCard = ({ ride, onSelect, onDelete, currentUser, isDeleting, showBooki
   const canManage = currentUser?.role === "admin" || currentUser?.id === riderIdValue;
   const showRating = ride.riderId?.rating !== undefined;
   const isRider = currentUser?.role === "rider";
+  const statusLabel = ride.status ? ride.status.replace(/_/g, " ") : "";
 
   return (
-    <div className="card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "1rem" }}>
-      <div>
-        <h3>
-          {ride.from} → {ride.to}
-        </h3>
-        <p>
-          {ride.date} at {ride.time} • {ride.distance} km • ₹{ride.fare}
-        </p>
-        <small>
-          Rider: {ride.riderId?.name} ({ride.riderId?.gender}){showRating && ` • Rating ${formatRating(ride.riderId.rating)}`}
-          {ride.status && ` • Status: ${ride.status}`}
-        </small>
+    <article className="card ride-card">
+      <div className="ride-card__header">
+        <div>
+          <p className="eyebrow">Route</p>
+          <p className="ride-card__destination">
+            {ride.from} → {ride.to}
+          </p>
+          <div className="ride-card__meta">
+            <span>
+              {ride.date} • {ride.time}
+            </span>
+            {ride.distance && <span>{ride.distance} km</span>}
+            {ride.seats && <span>{ride.seats} seats</span>}
+          </div>
+        </div>
+        <div className="badge">₹{ride.fare}</div>
       </div>
-      <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+
+      <div className="ride-card__secondary">
+        <span>
+          Rider: <strong>{ride.riderId?.name}</strong> ({ride.riderId?.gender || "NA"})
+        </span>
+        {showRating && <span>Rating {formatRating(ride.riderId.rating)}</span>}
+        {ride.riderContact && <span>Contact {ride.riderContact}</span>}
+      </div>
+
+      {ride.status && (
+        <div className="ride-card__secondary">
+          <span className={`status-pill ${ride.status === "completed" ? "success" : "warning"}`}>{statusLabel}</span>
+        </div>
+      )}
+
+      <div className="ride-card__actions">
         <Link className="btn secondary" to={`/ride/${ride._id}`}>
           Details
         </Link>
-        {/* Only show Book button for customers (showBooking prop) */}
         {showBooking && !isRider && (
           <button className="btn" onClick={() => onSelect?.(ride)}>
             Book
           </button>
         )}
         {canManage && (
-          <button
-            className="btn secondary"
-            onClick={() => onDelete?.(ride)}
-            style={{ background: "#c62828", color: "#fff" }}
-            disabled={isDeleting}
-          >
+          <button className="btn destructive" onClick={() => onDelete?.(ride)} disabled={isDeleting}>
             {isDeleting ? "Deleting..." : "Delete"}
           </button>
         )}
       </div>
-    </div>
+    </article>
   );
 };
 

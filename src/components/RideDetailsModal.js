@@ -15,34 +15,52 @@ const RideDetailsModal = ({ ride, onClose, onConfirm, isBooking }) => {
   return (
     <div className="modal-backdrop">
       <div className="modal card">
-        <h2>Ride Details</h2>
-        <p>
+        <p className="eyebrow">Ride summary</p>
+        <h2>
           {ride.from} → {ride.to}
-        </p>
-        <p>
-          Date: {ride.date} | Time: {ride.time}
-        </p>
-        <p>Price: ₹{ride.fare}</p>
-        <p>
-          Rider: {riderName}
-          {riderRating !== undefined && ` • Rating ${Number(riderRating).toFixed(1)}/5`}
-        </p>
-        <p>Rider mobile: {riderPhone}</p>
-        <p>Destination: {ride.to}</p>
-        <p>Helpline: {helplineNumber}</p>
+        </h2>
+        <div className="ride-card__meta meta-spacer">
+          <span>
+            {ride.date} · {ride.time}
+          </span>
+          {ride.distance && <span>{ride.distance} km</span>}
+          <span>Fare ₹{ride.fare}</span>
+        </div>
+
+        <div className="split-panel">
+          <div className="stack">
+            <div>Rider: {riderName}</div>
+            {riderRating !== undefined && <div>Rating: {Number(riderRating).toFixed(1)}/5</div>}
+            <div>Contact: {riderPhone}</div>
+            <div>Destination: {ride.to}</div>
+          </div>
+          <div className="card supporting-panel">
+            <p className="eyebrow">Safety</p>
+            <p className="section-subtitle compact">
+              Bookings log to the admin helpline for monitoring. Share your drop details before confirming.
+            </p>
+            <strong>Helpline {helplineNumber}</strong>
+          </div>
+        </div>
+
         <div className="grid">
-          <textarea
-            placeholder="Message to rider (drop location / instructions)"
-            rows={3}
-            value={bookingMessage}
-            onChange={(e) => setBookingMessage(e.target.value)}
-          />
-          <button className="btn" onClick={() => onConfirm(bookingMessage)} disabled={isBooking}>
-            {isBooking ? "Booking..." : "Confirm ride"}
-          </button>
-          <button className="btn secondary" onClick={onClose}>
-            Close
-          </button>
+          <label>
+            Message to rider
+            <textarea
+              placeholder="Add landmark, luggage detail or accessibility help"
+              rows={3}
+              value={bookingMessage}
+              onChange={(e) => setBookingMessage(e.target.value)}
+            />
+          </label>
+          <div className="form-actions">
+            <button className="btn" onClick={() => onConfirm(bookingMessage)} disabled={isBooking}>
+              {isBooking ? "Booking..." : "Confirm ride"}
+            </button>
+            <button className="btn secondary" onClick={onClose}>
+              Close
+            </button>
+          </div>
         </div>
       </div>
     </div>

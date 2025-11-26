@@ -129,87 +129,86 @@ const Dashboard = () => {
   const displayRides = isRider ? allRides : rides;
 
   return (
-    <main className="container grid" style={{ gap: "1.5rem" }}>
-      {/* HEADER - Different for riders vs customers */}
-      <div
-        className="card"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <div>
-          <h2>Welcome back, {user?.name}</h2>
-          {isRider ? (
-            <p>Manage your rides and view all available rides in the system.</p>
-          ) : (
-            <p>Search and book rides for your campus commute.</p>
+    <main className="container grid home-page">
+      <section className="card">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">{isRider ? "Rider workspace" : "Passenger workspace"}</p>
+            <h1 className="page-title">Welcome back, {user?.name}</h1>
+            <p className="section-subtitle">
+              {isRider
+                ? "Publish and manage every ride with instant visibility into bookings, complaints and helpline context."
+                : "Search, filter and confirm upcoming rides with transparent pricing, dual ratings and helpline support."}
+            </p>
+          </div>
+          {isRider && (
+            <button className="btn" onClick={modal.open}>
+              Add ride
+            </button>
           )}
         </div>
-
-        {/* Only show Add Ride button for riders */}
-        {isRider && (
-          <button className="btn" onClick={modal.open}>
-            Add Ride
-          </button>
-        )}
-      </div>
-
-      {/* SEARCH - Only for customers */}
-      {isCustomer && <RideSearch onSearch={searchRides} />}
-
-      {/* RIDES LIST */}
-      <section className="grid">
-        {loadingAllRides && isRider ? (
-          <p>Loading rides...</p>
-        ) : (
-          displayRides.map((ride) => (
-            <RideCard
-              key={ride._id}
-              ride={ride}
-              currentUser={user}
-              isDeleting={deletingRideId === ride._id}
-              onSelect={(r) => {
-                // Only allow booking for customers
-                if (isCustomer) {
-                  if (!isAuthenticated) {
-                    alert("Please login to book rides");
-                    return;
-                  }
-                  setSelectedRide(r);
-                }
-              }}
-              onDelete={(r) => {
-                if (deletingRideId && deletingRideId !== r._id) return;
-                handleDeleteRide(r);
-              }}
-              showBooking={isCustomer} // Only show booking button for customers
-            />
-          ))
-        )}
-
-        {!displayRides.length && !loadingAllRides && <p>No rides found.</p>}
       </section>
 
-      {/* ADD RIDE MODAL - Only for riders */}
+      {isCustomer && <RideSearch onSearch={searchRides} />}
+
+      <section className="card">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">{isRider ? "All rides" : "Recommended rides"}</p>
+            <h2>Your live feed</h2>
+          </div>
+          <span className="badge">
+            {displayRides.length} {displayRides.length === 1 ? "ride" : "rides"}
+          </span>
+        </div>
+
+        {loadingAllRides && isRider ? (
+          <div className="empty-state">Loading rides...</div>
+        ) : (
+          <div className="rides-grid">
+            {displayRides.map((ride) => (
+              <RideCard
+                key={ride._id}
+                ride={ride}
+                currentUser={user}
+                isDeleting={deletingRideId === ride._id}
+                onSelect={(r) => {
+                  if (isCustomer) {
+                    if (!isAuthenticated) {
+                      alert("Please login to book rides");
+                      return;
+                    }
+                    setSelectedRide(r);
+                  }
+                }}
+                onDelete={(r) => {
+                  if (deletingRideId && deletingRideId !== r._id) return;
+                  handleDeleteRide(r);
+                }}
+                showBooking={isCustomer}
+              />
+            ))}
+          </div>
+        )}
+
+        {!displayRides.length && !loadingAllRides && <div className="empty-state">No rides found.</div>}
+      </section>
+
       {isRider && (
         <AddRideModal
           isOpen={modal.isOpen}
           onClose={modal.close}
-      onSuccess={() => {
-        refresh();
-        // Refresh all rides for rider
-        if (isRider) {
-          api.get("/rides/all").then(({ data }) => {
-            setAllRides(data.data || []);
-          });
-        }
-      }}
+          onSuccess={() => {
+            refresh();
+            if (isRider) {
+              api.get("/rides/all").then(({ data }) => {
+                setAllRides(data.data || []);
+              });
+            }
+          }}
         />
       )}
 
-      {/* RIDE DETAILS + BOOKING MODAL - Only for customers */}
       {isCustomer && (
         <RideDetailsModal
           ride={selectedRide}
