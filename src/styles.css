@@ -761,12 +761,12 @@ textarea {
   }
 }
 
-.fixed-header {
+/* .fixed-header {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   z-index: 9999;
    /* same as your header background */
-}
+} */
 
